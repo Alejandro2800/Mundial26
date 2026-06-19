@@ -1,0 +1,8 @@
+{
+  "appId": "com.mundial26.alarmas.sv",
+  "appName": "Mundial 26 Alarmas",
+  "webDir": "www",
+  "server": {
+    "androidScheme": "https"
+  }
+}
