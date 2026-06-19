@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full bg-slate-950 text-slate-100">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alarmas Mundial 2026 - El Salvador</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: { 500: '#22c55e', 600: '#16a34a' },
+                        salvador: { 500: '#0047AB', 600: '#003399' }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        sports: ['Rajdhani', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght=300;400;500;600;700;800&family=Rajdhani:wght=600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #090d16; }
+        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #22c55e; }
+    </style>
+</head>
+<body class="h-full flex flex-col justify-between font-sans">
+
+    <header class="bg-gradient-to-r from-slate-900 via-emerald-950 to-slate-900 border-b border-emerald-800/40 shadow-xl sticky top-0 z-40 backdrop-blur-md">
+        <div class="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <div class="bg-brand-500 text-slate-950 p-2.5 rounded-full flex items-center justify-center shadow-lg shadow-emerald-500/20">
+                    <i class="fa-solid fa-bell text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="font-sports text-2xl tracking-wider text-white font-extrabold flex items-center gap-2">
+                        ALARMAS MUNDIAL 2026
+                        <span class="text-xs bg-salvador-500 text-white font-sans font-semibold px-2.5 py-0.5 rounded-full">
+                            🇸🇻 EL SALVADOR CST (UTC-6)
+                        </span>
+                    </h1>
+                    <p class="text-xs text-emerald-400">Alarmas integradas en segundo plano nativo para sonar 5 minutos antes de cada partido</p>
+                </div>
+            </div>
+
+            <div class="bg-slate-950/80 border border-emerald-500/20 rounded-xl px-4 py-2 shadow-inner text-center sm:text-right">
+                <div class="text-[10px] text-slate-400 uppercase tracking-widest font-bold flex items-center justify-center sm:justify-end gap-1.5">
+                    <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    Hora Local El Salvador
+                </div>
+                <div id="live-clock" class="font-sports text-2xl tracking-widest font-bold text-emerald-400">--:--:-- --</div>
+                <div id="live-date" class="text-[10px] text-slate-400 font-medium">Cargando fecha...</div>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8 w-full grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div class="space-y-6">
+            <div class="bg-gradient-to-br from-slate-900 to-indigo-950 border border-slate-800 rounded-2xl p-5 shadow-xl relative overflow-hidden">
+                <h2 class="text-lg font-bold text-white mb-3 flex items-center gap-2">
+                    <i class="fa-solid fa-sliders text-salvador-500"></i>Configuración de Alertas
+                </h2>
+                <p class="text-xs text-slate-300 mb-4 leading-relaxed">
+                    Las alarmas se configuran a nivel del sistema operativo Android. Sonarán y mostrarán alertas flotantes incluso si cierras la app o bloqueas el celular.
+                </p>
+
+                <div class="bg-slate-950/60 rounded-xl p-3 border border-slate-800 mb-4">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs font-semibold text-slate-400">Permisos del Sistema:</span>
+                        <span id="notif-badge" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-950 text-amber-400 border border-amber-500/30">Comprobando...</span>
+                    </div>
+                    <button id="btn-request-notif" class="w-full text-center bg-salvador-500 hover:bg-salvador-600 text-white font-bold text-xs py-2 px-3 rounded-lg transition-all">
+                        <i class="fa-solid fa-shield-halved mr-1.5"></i>Garantizar Permisos de Alarma
+                    </button>
+                </div>
+
+                <div class="space-y-2">
+                    <label class="text-xs font-bold text-slate-400 block">Probar Sonido de Alerta (15s):</label>
+                    <div class="grid grid-cols-2 gap-2">
+                        <button id="btn-sound-horn" class="p-2.5 rounded-lg text-xs font-bold flex flex-col items-center justify-center transition-all bg-emerald-500 text-slate-950 shadow-lg shadow-emerald-500/20">
+                            <i class="fa-solid fa-bullhorn mb-1 text-base"></i>Bocina de Estadio
+                        </button>
+                        <button id="btn-sound-whistle" class="p-2.5 rounded-lg text-xs font-bold flex flex-col items-center justify-center transition-all bg-slate-950 hover:bg-slate-800 text-slate-300 border border-slate-800">
+                            <i class="fa-solid fa-circle-play mb-1 text-base"></i>Silbato Árbitro
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl">
+                <h3 class="text-base font-bold text-white mb-4 flex items-center justify-between">
+                    <span>Lista de Alarmas Programadas</span>
+                    <span id="active-alarms-count" class="bg-emerald-950 text-emerald-400 border border-emerald-500/30 text-xs px-2.5 py-0.5 rounded-full font-bold">0</span>
+                </h3>
+                <div id="active-alarms-list" class="space-y-2 max-h-80 overflow-y-auto pr-1"></div>
+            </div>
+        </div>
+
+        <div class="lg:col-span-2 space-y-6">
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-xl space-y-3">
+                <div class="flex flex-col md:flex-row items-center justify-between gap-3">
+                    <div class="flex items-center gap-1 bg-slate-950 p-1 rounded-xl w-full md:w-auto border border-slate-800/80">
+                        <button id="filter-state-all" class="state-filter-btn px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all bg-emerald-500 text-slate-950">Todos</button>
+                        <button id="filter-state-upcoming" class="state-filter-btn px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all text-slate-400 hover:text-white">Próximos</button>
+                        <button id="filter-state-finished" class="state-filter-btn px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all text-slate-400 hover:text-white">Ya Jugados</button>
+                    </div>
+                    <div class="relative w-full md:w-64">
+                        <input id="search-input" type="text" placeholder="Buscar selección o estadio..." class="w-full bg-slate-950 border border-slate-800 rounded-xl py-2 pl-9 pr-4 text-xs focus:ring-2 focus:ring-emerald-500 focus:outline-none placeholder-slate-500 text-white" />
+                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-500 text-xs"></i>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 items-center gap-3 pt-2 border-t border-slate-800/50">
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs font-bold text-slate-400 whitespace-nowrap">Filtrar por fecha:</span>
+                        <select id="date-select-filter" class="bg-slate-950 border border-slate-800 rounded-lg text-xs py-1.5 px-3 text-emerald-400 font-bold focus:outline-none focus:ring-1 focus:ring-emerald-500 w-full">
+                            <option value="todos">Cualquier Fecha</option>
+                            <option value="2026-06-11">Jueves 11 de Junio (Inauguración)</option>
+                            <option value="2026-06-12">Viernes 12 de Junio</option>
+                            <option value="2026-06-13">Sábado 13 de Junio</option>
+                            <option value="2026-06-14">Domingo 14 de Junio</option>
+                            <option value="2026-06-15">Lunes 15 de Junio</option>
+                            <option value="2026-06-16">Martes 16 de Junio</option>
+                            <option value="2026-06-17">Miércoles 17 de Junio</option>
+                            <option value="2026-06-18">Jueves 18 de Junio</option>
+                            <option value="2026-06-19" selected>Viernes 19 de Junio (Hoy)</option>
+                            <option value="2026-06-20">Sábado 20 de Junio</option>
+                            <option value="2026-06-21">Domingo 21 de Junio</option>
+                            <option value="2026-06-22">Lunes 22 de Junio</option>
+                            <option value="2026-06-23">Martes 23 de Junio</option>
+                            <option value="2026-06-24">Miércoles 24 de Junio</option>
+                            <option value="2026-06-25">Jueves 25 de Junio</option>
+                            <option value="2026-06-26">Viernes 26 de Junio</option>
+                            <option value="2026-06-27">Sábado 27 de Junio (Fin de Grupos)</option>
+                        </select>
+                    </div>
+                    <div class="flex items-center justify-end">
+                        <label class="flex items-center gap-2 cursor-pointer text-xs font-semibold text-slate-400">
+                            <input id="filter-only-alarms" type="checkbox" class="w-4 h-4 rounded bg-slate-950 border-slate-800 text-emerald-500 focus:ring-0 cursor-pointer" />
+                            <span>Ver solo alarmas activas</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between border-t border-slate-800/40 pt-2 text-xs text-slate-400">
+                    <div>Mostrando <span id="match-count" class="text-emerald-400 font-bold">0</span> partidos</div>
+                    <div class="flex items-center gap-1.5">
+                        <span class="inline-block w-2.5 h-2.5 bg-emerald-500 rounded-full animate-ping"></span>
+                        Hoy es <span class="text-emerald-400 font-bold">19 de Junio de 2026</span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="matches-container" class="space-y-4"></div>
+        </div>
+    </main>
+
+    <div id="alarm-modal" class="fixed inset-0 bg-slate-950/95 flex items-center justify-center p-4 z-50 backdrop-blur-md hidden">
+        <div class="bg-gradient-to-b from-slate-900 to-emerald-950 border border-emerald-500/40 rounded-3xl p-8 max-w-md w-full shadow-2xl text-center relative overflow-hidden">
+            <div class="mx-auto w-20 h-20 bg-emerald-500 text-slate-950 rounded-full flex items-center justify-center mb-6 shadow-lg shadow-emerald-500/30 animate-bounce">
+                <i class="fa-solid fa-bell text-4xl"></i>
+            </div>
+            <span class="bg-emerald-950 text-emerald-400 border border-emerald-500/30 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">¡ALERTA DE ENCUENTRO!</span>
+            <h3 class="text-2xl font-bold text-white mt-4 mb-1">El partido inicia en 5 minutos</h3>
+            <div class="bg-slate-950/80 border border-slate-800 rounded-2xl p-5 my-5">
+                <div class="flex items-center justify-center gap-3 text-2xl font-bold"><span id="modal-team-a-flag">🇺🇸</span><span id="modal-team-a">Estados Unidos</span></div>
+                <div class="text-xs text-slate-500 font-bold my-1">VS</div>
+                <div class="flex items-center justify-center gap-3 text-2xl font-bold"><span id="modal-team-b-flag">🇦🇺</span><span id="modal-team-b">Australia</span></div>
+                <p class="text-[11px] text-slate-400 mt-3"><i class="fa-solid fa-location-dot text-emerald-500 mr-1"></i><span id="modal-stadium">Seattle Stadium</span></p>
+            </div>
+            <button id="btn-stop-alarm" class="w-full bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-extrabold py-3.5 px-4 rounded-xl shadow-lg transition-all">CERRAR ALERTA</button>
+        </div>
+    </div>
+
+    <script src="capacitor.js"></script>
+
+    <script>
+        // --- CALENDARIO OFICIAL ---
+        const PARTIDOS = [
+            { id: "1", fecha: "2026-06-11", horaLabel: "13:00", isoDateTime: "2026-06-11T13:00:00-06:00", equipoA: "México", equipoB: "Sudáfrica", banderaA: "🇲🇽", banderaB: "🇿🇦", grupo: "Grupo A", estadio: "Estadio Azteca, CDMX" },
+            { id: "2", fecha: "2026-06-11", horaLabel: "20:00", isoDateTime: "2026-06-11T20:00:00-06:00", equipoA: "Corea del Sur", equipoB: "República Checa", banderaA: "🇰🇷", banderaB: "🇨🇿", grupo: "Grupo A", estadio: "Guadalajara Stadium" },
+            { id: "3", fecha: "2026-06-12", horaLabel: "13:00", isoDateTime: "2026-06-12T13:00:00-06:00", equipoA: "Canadá", equipoB: "Bosnia & Herzegovina", banderaA: "🇨🇦", banderaB: "🇧🇦", grupo: "Grupo B", estadio: "BC Place, Vancouver" },
+            { id: "4", fecha: "2026-06-12", horaLabel: "19:00", isoDateTime: "2026-06-12T19:00:00-06:00", equipoA: "Estados Unidos", equipoB: "Paraguay", banderaA: "🇺🇸", banderaB: "🇵🇾", grupo: "Grupo D", estadio: "Los Angeles Stadium" },
+            { id: "5", fecha: "2026-06-13", horaLabel: "13:00", isoDateTime: "2026-06-13T13:00:00-06:00", equipoA: "Qatar", equipoB: "Suiza", banderaA: "🇶🇦", banderaB: "🇨🇭", grupo: "Grupo B", estadio: "Lumen Field, Seattle" },
+            { id: "6", fecha: "2026-06-13", horaLabel: "16:00", isoDateTime: "2026-06-13T16:00:00-06:00", equipoA: "Brasil", equipoB: "Marruecos", banderaA: "🇧🇷", banderaB: "🇲🇦", grupo: "Grupo C", estadio: "Gillette Stadium" },
+            { id: "7", fecha: "2026-06-13", horaLabel: "19:00", isoDateTime: "2026-06-13T19:00:00-06:00", equipoA: "Haití", equipoB: "Escocia", banderaA: "🇭🇹", banderaB: "🏴󠁧󠁢󠁳󠁣󠁴󠁿", grupo: "Grupo C", estadio: "MetLife Stadium" },
+            { id: "8", fecha: "2026-06-13", horaLabel: "22:00", isoDateTime: "2026-06-13T22:00:00-06:00", equipoA: "Australia", equipoB: "Turquía", banderaA: "🇦🇺", banderaB: "🇹🇷", grupo: "Grupo D", estadio: "Levi's Stadium" },
+            { id: "29", fecha: "2026-06-19", horaLabel: "13:00", isoDateTime: "2026-06-19T13:00:00-06:00", equipoA: "Estados Unidos", equipoB: "Australia", banderaA: "🇺🇸", banderaB: "🇦🇺", grupo: "Grupo D", estadio: "Lumen Field, Seattle" },
+            { id: "30", fecha: "2026-06-19", horaLabel: "16:00", isoDateTime: "2026-06-19T16:00:00-06:00", equipoA: "Escocia", equipoB: "Marruecos", banderaA: "🏴󠁧󠁢󠁳󠁣󠁴󠁿", banderaB: "🇲🇦", grupo: "Grupo C", estadio: "Gillette Stadium" },
+            { id: "31", fecha: "2026-06-19", horaLabel: "18:30", isoDateTime: "2026-06-19T18:30:00-06:00", equipoA: "Brasil", equipoB: "Haití", banderaA: "🇧🇷", banderaB: "🇭🇹", grupo: "Grupo C", estadio: "Lincoln Financial Field" },
+            { id: "32", fecha: "2026-06-19", horaLabel: "21:00", isoDateTime: "2026-06-19T21:00:00-06:00", equipoA: "Turquía", equipoB: "Paraguay", banderaA: "🇹🇷", banderaB: "🇵🇾", group: "Grupo D", estadio: "Levi's Stadium" }
+        ];
+
+        // Verificar entorno nativo APK
+        const isNative = window.Capacitor !== undefined && window.Capacitor.Plugins !== undefined;
+
+        // --- MANEJADOR DE ALARMAS DE SEGUNDO PLANO (SISTEMA OPERATIVO) ---
+        async function syncNativeAlarms() {
+            if (!isNative) return;
+            const { LocalNotifications } = window.Capacitor.Plugins;
+
+            const permission = await LocalNotifications.checkPermissions();
+            if (permission.display !== 'granted') {
+                await LocalNotifications.requestPermissions();
+            }
+
+            const now = new Date().getTime();
+            for (const partido of PARTIDOS) {
+                const esActiva = !deshabilitados[partido.id];
+                const matchTime = new Date(partido.isoDateTime).getTime();
+                const triggerTime = matchTime - (5 * 60 * 1000); // 5 minutos antes
+
+                if (esActiva && triggerTime > now) {
+                    await registerNativeNotification(partido, new Date(triggerTime));
+                } else if (!esActiva) {
+                    await removeNativeNotification(partido.id);
+                }
+            }
+        }
+
+        async function registerNativeNotification(partido, dateObject) {
+            if (!isNative) return;
+            const { LocalNotifications } = window.Capacitor.Plugins;
+            try {
+                await LocalNotifications.cancel({ notifications: [{ id: parseInt(partido.id) }] });
+                await LocalNotifications.schedule({
+                    notifications: [{
+                        title: "⚽ ¡Partido en 5 Minutos! 🇸🇻",
+                        body: `${partido.equipoA} vs ${partido.equipoB} - En el ${partido.estadio}`,
+                        id: parseInt(partido.id),
+                        schedule: { at: dateObject },
+                        sound: true,
+                        importance: 5, 
+                        allowInCompact: true
+                    }]
+                });
+            } catch (e) { console.error("Error al programar alerta:", e); }
+        }
+
+        async function removeNativeNotification(partidoId) {
+            if (!isNative) return;
+            const { LocalNotifications } = window.Capacitor.Plugins;
+            try {
+                await LocalNotifications.cancel({ notifications: [{ id: parseInt(partidoId) }] });
+            } catch (e) { console.error(e); }
+        }
+
+        // --- REPRODUCTOR DE AUDIO LOCAL ---
+        class SoundEngine {
+            constructor() { this.ctx = null; }
+            init() { 
+                if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+                if (this.ctx.state === 'suspended') this.ctx.resume();
+            }
+            playStadiumHorn() {
+                this.init(); const now = this.ctx.currentTime; const oscillators = []; const masterGain = this.ctx.createGain();
+                [150, 300, 450].forEach(f => {
+                    const osc = this.ctx.createOscillator(); osc.type = 'sawtooth'; osc.frequency.setValueAtTime(f, now);
+                    osc.connect(masterGain); osc.start(now); oscillators.push(osc);
+                });
+                masterGain.connect(this.ctx.destination);
+                masterGain.gain.setValueAtTime(0.2, now); masterGain.gain.exponentialRampToValueAtTime(0.001, now + 1.5);
+                setTimeout(() => oscillators.forEach(o => { try{ o.stop(); }catch(e){} }), 1600);
+            }
+            playRefereeWhistle() {
+                this.init(); const now = this.ctx.currentTime; const osc = this.ctx.createOscillator(); const gain = this.ctx.createGain();
+                osc.type = 'sine'; osc.frequency.setValueAtTime(2200, now); gain.gain.setValueAtTime(0.2, now); gain.gain.exponentialRampToValueAtTime(0.001, now + 0.6);
+                osc.connect(gain); gain.connect(this.ctx.destination); osc.start(now);
+                setTimeout(() => { try{ osc.stop(); }catch(e){} }, 700);
+            }
+        }
+        const audio = new SoundEngine();
+
+        // --- MOTOR DE FILTROS Y ESTADOS ---
+        let deshabilitados = JSON.parse(localStorage.getItem('alarmas_desactivadas_2026_v3')) || {};
+        let filtroEstado = 'all';
+        let filtroFecha = '2026-06-19';
+        let soloAlarmas = false;
+        let busqueda = '';
+        let selectedSound = 'stadium';
+        let currentActiveAlarm = null;
+        let alarmSoundInterval = null;
+
+        const liveClock = document.getElementById('live-clock');
+        const liveDate = document.getElementById('live-date');
+        const matchesContainer = document.getElementById('matches-container');
+        const activeAlarmsList = document.getElementById('active-alarms-list');
+        const activeAlarmsCount = document.getElementById('active-alarms-count');
+        const matchCountEl = document.getElementById('match-count');
+        const searchInput = document.getElementById('search-input');
+        const dateSelectFilter = document.getElementById('date-select-filter');
+        const filterOnlyAlarms = document.getElementById('filter-only-alarms');
+        const notifBadge = document.getElementById('notif-badge');
+        const btnRequestNotif = document.getElementById('btn-request-notif');
+        const btnSoundHorn = document.getElementById('btn-sound-horn');
+        const btnSoundWhistle = document.getElementById('btn-sound-whistle');
+        const alarmModal = document.getElementById('alarm-modal');
+        const btnStopAlarm = document.getElementById('btn-stop-alarm');
+
+        function updateNotifBadge() {
+            if (isNative) {
+                notifBadge.textContent = "Android Nativo";
+                notifBadge.className = "text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-400 border border-emerald-500/30";
+                return;
+            }
+            if ("Notification" in window) {
+                notifBadge.textContent = Notification.permission === "granted" ? "Web Activada" : "Web Pendiente";
+            }
+        }
+
+        btnRequestNotif.addEventListener('click', async () => {
+            if (isNative) {
+                await syncNativeAlarms();
+            } else if ("Notification" in window) {
+                await Notification.requestPermission();
+            }
+            updateNotifBadge();
+        });
+
+        function runClockAndCheckAlarms() {
+            const now = new Date();
+            liveClock.textContent = now.toLocaleTimeString('es-SV');
+            liveDate.textContent = now.toLocaleDateString('es-SV', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+            
+            const nowSeconds = Math.floor(now.getTime() / 1000);
+            PARTIDOS.forEach(partido => {
+                const matchTime = new Date(partido.isoDateTime);
+                if (now.getTime() < matchTime.getTime() && !deshabilitados[partido.id]) {
+                    const triggerTimeSecs = Math.floor((matchTime.getTime() - (5 * 60 * 1000)) / 1000);
+                    if (nowSeconds === triggerTimeSecs && !currentActiveAlarm) {
+                        currentActiveAlarm = partido;
+                        document.getElementById('modal-team-a').textContent = partido.equipoA;
+                        document.getElementById('modal-team-b').textContent = partido.equipoB;
+                        document.getElementById('modal-team-a-flag').textContent = partido.banderaA;
+                        document.getElementById('modal-team-b-flag').textContent = partido.banderaB;
+                        document.getElementById('modal-stadium').textContent = partido.estadio;
+                        alarmModal.classList.remove('hidden');
+                        alarmSoundInterval = setInterval(() => { selectedSound === 'stadium' ? audio.playStadiumHorn() : audio.playRefereeWhistle(); }, 2000);
+                    }
+                }
+            });
+        }
+
+        btnStopAlarm.addEventListener('click', () => {
+            if (alarmSoundInterval) clearInterval(alarmSoundInterval);
+            alarmModal.classList.add('hidden');
+            currentActiveAlarm = null;
+        });
+
+        async function toggleAlarma(partidoId) {
+            const partido = PARTIDOS.find(p => p.id === partidoId);
+            if (!partido) return;
+
+            if (deshabilitados[partidoId]) {
+                delete deshabilitados[partidoId];
+                const matchTime = new Date(partido.isoDateTime).getTime();
+                await registerNativeNotification(partido, new Date(matchTime - (5 * 60 * 1000)));
+            } else {
+                deshabilitados[partidoId] = true;
+                await removeNativeNotification(partidoId);
+            }
+            localStorage.setItem('alarmas_desactivadas_2026_v3', JSON.stringify(deshabilitados));
+            renderMatches();
+            renderActiveAlarmsList();
+        }
+
+        // --- SISTEMA DE RENDERS ---
+        function renderMatches() {
+            matchesContainer.innerHTML = '';
+            const now = new Date().getTime();
+            
+            const filtrados = PARTIDOS.filter(p => {
+                const mTime = new Date(p.isoDateTime).getTime();
+                if (filtroEstado === 'upcoming' && now > mTime) return false;
+                if (filtroEstado === 'finished' && now <= mTime) return false;
+                if (filtroFecha !== 'todos' && p.fecha !== filtroFecha) return false;
+                if (soloAlarmas && deshabilitados[p.id]) return false;
+                return p.equipoA.toLowerCase().includes(busqueda.toLowerCase()) || p.equipoB.toLowerCase().includes(busqueda.toLowerCase());
+            });
+
+            matchCountEl.textContent = filtrados.length;
+
+            filtrados.forEach(partido => {
+                const mTime = new Date(partido.isoDateTime).getTime();
+                const esPasado = now > mTime;
+                const activa = !deshabilitados[partido.id];
+                const card = document.createElement('div');
+                card.className = `bg-slate-900 border ${activa && !esPasado ? 'border-emerald-500/40':'border-slate-800'} rounded-2xl p-4 flex flex-col justify-between`;
+                card.innerHTML = `
+                    <div class="flex justify-between items-center text-xs text-slate-400">
+                        <span>${partido.grupo} | ${partido.fecha}</span>
+                        <span class="font-bold ${activa && !esPasado ? 'text-emerald-400':'text-slate-500'}">${esPasado ? 'Finalizado' : activa ? '🔔 Activa (-5 min)' : '🔕 Desactivada'}</span>
+                    </div>
+                    <div class="flex justify-around items-center my-3">
+                        <div class="text-center"><span class="text-3xl">${partido.banderaA}</span><p class="text-xs font-bold">${partido.equipoA}</p></div>
+                        <div class="text-center font-sports text-lg text-amber-400 font-bold">${partido.horaLabel}<span class="text-[9px] text-slate-500 block">CST</span></div>
+                        <div class="text-center"><span class="text-3xl">${partido.banderaB}</span><p class="text-xs font-bold">${partido.equipoB}</p></div>
+                    </div>
+                    <div class="flex justify-between items-center pt-2 border-t border-slate-800/60">
+                        <span class="text-[10px] text-slate-400 truncate max-w-[180px]">📍 ${partido.estadio}</span>
+                        ${esPasado ? '<span class="text-xs text-slate-600 font-bold">Jugado</span>' : `
+                            <button onclick="toggleAlarma('${partido.id}')" class="text-xs font-bold px-3 py-1.5 rounded-xl ${activa ? 'bg-red-900/40 text-red-400 border border-red-500/30' : 'bg-emerald-500 text-slate-950'}">
+                                ${activa ? 'Desactivar' : 'Activar'}
+                            </button>
+                        `}
+                    </div>
+                `;
+                matchesContainer.appendChild(card);
+            });
+        }
+
+        function renderActiveAlarmsList() {
+            activeAlarmsList.innerHTML = '';
+            const now = new Date().getTime();
+            const activas = PARTIDOS.filter(p => !deshabilitados[p.id] && new Date(p.isoDateTime).getTime() > now);
+            activeAlarmsCount.textContent = activas.length;
+            
+            if(activas.length === 0) {
+                activeAlarmsList.innerHTML = '<p class="text-xs text-slate-500 text-center py-2">Sin alarmas configuradas.</p>';
+                return;
+            }
+            activas.forEach(p => {
+                const div = document.createElement('div');
+                div.className = "bg-slate-950 p-2 rounded-lg border border-slate-800 flex justify-between items-center text-xs";
+                div.innerHTML = `<span>${p.banderaA} vs ${p.banderaB}</span><button onclick="toggleAlarma('${p.id}')" class="text-red-400"><i class="fa-solid fa-trash-can"></i></button>`;
+                activeAlarmsList.appendChild(div);
+            });
+        }
+
+        // --- ASIGNACIÓN DE FILTROS ---
+        document.querySelectorAll('.state-filter-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('.state-filter-btn').forEach(b => {
+                    b.className = "state-filter-btn px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all text-slate-400 hover:text-white";
+                });
+                e.target.className = "state-filter-btn px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all bg-emerald-500 text-slate-950";
+                const id = e.target.id;
+                if (id === 'filter-state-all') filtroEstado = 'all';
+                else if (id === 'filter-state-upcoming') filtroEstado = 'upcoming';
+                else if (id === 'filter-state-finished') filtroEstado = 'finished';
+                renderMatches();
+            });
+        });
+
+        dateSelectFilter.addEventListener('change', (e) => { filtroFecha = e.target.value; renderMatches(); });
+        searchInput.addEventListener('input', (e) => { busqueda = e.target.value; renderMatches(); });
+        filterOnlyAlarms.addEventListener('change', (e) => { soloAlarmas = e.target.checked; renderMatches(); });
+        btnSoundHorn.addEventListener('click', () => { selectedSound = 'stadium'; audio.playStadiumHorn(); });
+        btnSoundWhistle.addEventListener('click', () => { selectedSound = 'referee'; audio.playRefereeWhistle(); });
+
+        window.addEventListener('DOMContentLoaded', async () => {
+            setInterval(runClockAndCheckAlarms, 1000);
+            renderMatches();
+            renderActiveAlarmsList();
+            updateNotifBadge();
+            if (isNative) await syncNativeAlarms();
+        });
+    </script>
+</body>
+</html>
